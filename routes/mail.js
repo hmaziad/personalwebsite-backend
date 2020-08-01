@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Joi = require("@hapi/joi");
+const config = require("config");
 const sendEmail = require("../services/sendEmail");
 
 router.post("/", async (req, res) => {
@@ -22,6 +23,10 @@ router.post("/", async (req, res) => {
     console.log("Email Route Error");
     res.status(400).send({ status: "fail", err: err.response });
   }
+});
+
+router.get("/", (req, res) => {
+  res.send(config.get("anyvar"));
 });
 
 function validateEmailInput(emailInput) {
