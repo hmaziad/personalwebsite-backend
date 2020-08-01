@@ -11,35 +11,67 @@ var transporter = nodemailer.createTransport({
 
 module.exports = function ({ to, subject, body }) {
   var mailOptions = {
-    from: "husseinmaziadwebsite@gmail.com",
+    from: config.get("useremail"),
     to,
     subject,
     text: body,
   };
 
+  return new Promise((resolve, reject) => {
+    // apiFunction(
+    //   query,
+    //   (successResponse) => {
+    //     resolve(successResponse);
+    //   },
+    //   (errorResponse) => {
+    //     reject(errorResponse);
+    //   }
+    // );
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        reject(error);
+        // return Promise.reject("Some err");
+        // console.log(error);
+      } else {
+        resolve(info.response);
+        console.log("Email sent: " + info.response);
+        // return Promise.resolve("ok sent");
+      }
+    });
+  });
+
   console.log("subject: ", subject);
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
-      console.log(error);
+      throw new Error("Something went wrong");
+      // return Promise.reject("Some err");
+      // console.log(error);
     } else {
       console.log("Email sent: " + info.response);
+      // return Promise.resolve("ok sent");
     }
   });
 };
+// module.exports = function ({ to, subject, body }) {
+//   var mailOptions = {
+//     from: config.get("useremail"),
+//     to,
+//     subject,
+//     text: body,
+//   };
 
-// const promise1 = new Promise(async (resolve, reject) => {
-//   setTimeout(resolve, 1000, "wahad");
+//   console.log("subject: ", subject);
 
-//   // await axios.get("http://10.0.2.2:3900/api/signIn");
-// });
-
-// const promise2 = new Promise((resolve, reject) => {
-//   setTimeout(resolve, 5000, "two");
-// });
-
-// Promise.race([promise1, promise2]).then((value) => {
-//   console.log(value);
-//   // Both resolve, but promise2 is faster
-// });
-// // expected output: "two"
+//   transporter.sendMail(mailOptions, function (error, info) {
+//     if (error) {
+//       throw new Error("Something went wrong");
+//       // return Promise.reject("Some err");
+//       // console.log(error);
+//     } else {
+//       console.log("Email sent: " + info.response);
+//       // return Promise.resolve("ok sent");
+//     }
+//   });
+// };

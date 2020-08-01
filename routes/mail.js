@@ -9,17 +9,18 @@ router.post("/", async (req, res) => {
     console.log("error", error.details[0].message);
     return res.status(400).send(error.details[0].message);
   }
+
   try {
-    sendEmail({
+    const resp = await sendEmail({
       to: "hussein.maziad@gmail.com",
       subject: `${req.body.subject} by ${req.body.name}`,
       body: `Email: ${req.body.email} \n ${req.body.message}`,
     });
-    console.log("success");
-    return res.send({ status: "success" });
+
+    res.send({ status: "success", resp });
   } catch (err) {
-    console.log("Email Route Error", err);
-    return res.status(400).send({ status: "fail", error: err });
+    console.log("Email Route Error");
+    res.status(400).send({ status: "fail", err: err.response });
   }
 });
 
